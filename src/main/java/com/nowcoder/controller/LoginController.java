@@ -31,6 +31,7 @@ public class LoginController {
     public String reg(Model model,
                       @RequestParam("username") String username,
                       @RequestParam("password") String password,
+                      @RequestParam("next") String next,
                       @RequestParam(value = "rememberme", defaultValue = "false") boolean rememberme,
                       HttpServletResponse response) {
 
@@ -44,9 +45,12 @@ public class LoginController {
                 }
                 // 将 ticket 下发到 cookie
                 response.addCookie(cookie);
+                if (StringUtils.isNotBlank(next)) {
+                    return "redirect:" + next;
+                }
                 // 注册后跳转到首页
                 return "redirect:/";
-            }else {
+            } else {
                 model.addAttribute("msg", map.get("msg"));
                 return "login";
             }
@@ -58,17 +62,19 @@ public class LoginController {
     }
 
     @RequestMapping(path = {"/reglogin"}, method = {RequestMethod.GET})
-    public String regloginPage(Model model, @RequestParam(value = "next", required = false) String next) {
+    public String regloginPage(Model model,
+                               @RequestParam(value = "next", required = false) String next) {
         model.addAttribute("next", next);
         return "login";
     }
 
     @RequestMapping(path = {"/login/"}, method = {RequestMethod.POST})
     public String login(Model model,
-                      @RequestParam("username") String username,
-                      @RequestParam("password") String password,
-                      @RequestParam(value = "rememberme", defaultValue = "false") boolean rememberme,
-                      HttpServletResponse response) {
+                        @RequestParam("username") String username,
+                        @RequestParam("password") String password,
+                        @RequestParam(value = "next", required = false) String next,
+                        @RequestParam(value = "rememberme", defaultValue = "false") boolean rememberme,
+                        HttpServletResponse response) {
 
         try {
             Map<String, Object> map = userService.login(username, password);
@@ -80,9 +86,12 @@ public class LoginController {
                 }
                 // 将 ticket 下发到 cookie
                 response.addCookie(cookie);
+                if (StringUtils.isNotBlank(next)) {
+                    return "redirect:" + next;
+                }
                 // 登录后跳转到首页
                 return "redirect:/";
-            }else {
+            } else {
                 model.addAttribute("msg", map.get("msg"));
                 return "login";
             }
