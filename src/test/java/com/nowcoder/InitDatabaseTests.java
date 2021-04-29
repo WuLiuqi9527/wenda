@@ -35,17 +35,15 @@ public class InitDatabaseTests {
             user.setSalt("");
             userDAO.addUser(user);
 
-            for (int j = 0; j < 11; j++) {
-                Question question = new Question();
-                question.setCommentCount(i);
-                Date date = new Date();
-                date.setTime(date.getTime() + 1000 * 3600 * 5 * i);
-                question.setCreatedDate(date);
-                question.setUserId(j);
-                question.setTitle(String.format("TITLE{%d}", i));
-                question.setContent(String.format("Balaababalalalal Content %d", i));
-                questionDAO.addQuestion(question);
-            }
+            Question question = new Question();
+            question.setCommentCount(i);
+            Date date = new Date();
+            date.setTime(date.getTime() + 1000 * 3600 * 5 * i);
+            question.setCreatedDate(date);
+            question.setUserId(i);
+            question.setTitle(String.format("TITLE{%d}", i));
+            question.setContent(String.format("Balaababalalalal Content %d", i));
+            questionDAO.addQuestion(question);
         }
     }
 }

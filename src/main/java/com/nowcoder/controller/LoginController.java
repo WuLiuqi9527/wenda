@@ -34,7 +34,6 @@ public class LoginController {
                       @RequestParam("next") String next,
                       @RequestParam(value = "rememberme", defaultValue = "false") boolean rememberme,
                       HttpServletResponse response) {
-
         try {
             Map<String, Object> map = userService.register(username, password);
             if (map.containsKey("ticket")) {
@@ -43,20 +42,19 @@ public class LoginController {
                 if (rememberme) {
                     cookie.setMaxAge(3600 * 24 * 5);
                 }
-                // 将 ticket 下发到 cookie
                 response.addCookie(cookie);
                 if (StringUtils.isNotBlank(next)) {
                     return "redirect:" + next;
                 }
-                // 注册后跳转到首页
                 return "redirect:/";
             } else {
                 model.addAttribute("msg", map.get("msg"));
                 return "login";
             }
+
         } catch (Exception e) {
             logger.error("注册异常" + e.getMessage());
-            model.addAttribute("msg" + "服务器错误");
+            model.addAttribute("msg", "服务器错误");
             return "login";
         }
     }
@@ -75,7 +73,6 @@ public class LoginController {
                         @RequestParam(value = "next", required = false) String next,
                         @RequestParam(value = "rememberme", defaultValue = "false") boolean rememberme,
                         HttpServletResponse response) {
-
         try {
             Map<String, Object> map = userService.login(username, password);
             if (map.containsKey("ticket")) {
@@ -84,12 +81,10 @@ public class LoginController {
                 if (rememberme) {
                     cookie.setMaxAge(3600 * 24 * 5);
                 }
-                // 将 ticket 下发到 cookie
                 response.addCookie(cookie);
                 if (StringUtils.isNotBlank(next)) {
                     return "redirect:" + next;
                 }
-                // 登录后跳转到首页
                 return "redirect:/";
             } else {
                 model.addAttribute("msg", map.get("msg"));

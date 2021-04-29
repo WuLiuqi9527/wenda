@@ -16,15 +16,26 @@ public interface QuestionDAO {
 
     /**
      * 向 Question 表添加问题
+     *
      * @param question
-     * @return
+     * @return 返回主键 id
      */
     @Insert({"insert into", TABLE_NAME, "(", INSERT_FIELDS,
             ") values (#{title},#{content},#{createdDate},#{userId},#{commentCount})"})
     int addQuestion(Question question);
 
     /**
+     * 选取指定问题 (id)
+     *
+     * @param id
+     * @return
+     */
+    @Select({"select", SELECT_FIELDS, "from", TABLE_NAME, "where id=#{id}"})
+    Question getById(@Param("id") int id);
+
+    /**
      * 选取指定问题 (userId, offset, limit)
+     *
      * @param userId
      * @param offset
      * @param limit
@@ -32,8 +43,8 @@ public interface QuestionDAO {
      */
     @Select({"select", SELECT_FIELDS, "from", TABLE_NAME,
             "where user_id=#{userId} limit #{offset}, #{limit}"})
-    List<Question> selectLatestQuestions(@Param("userId") int userId,
-                                         @Param("offset") int offset,
-                                         @Param("limit") int limit);
+    List<Question> getLatestQuestions(@Param("userId") int userId,
+                                      @Param("offset") int offset,
+                                      @Param("limit") int limit);
 
 }
