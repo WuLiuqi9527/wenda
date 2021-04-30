@@ -40,4 +40,8 @@ public class QuestionService {
     public List<Question> getUserLatestQuestions(int userId, int offset, int limit) {
         return questionDAO.getUserLatestQuestions(userId, offset, limit);
     }
+
+    public int updateCommentCount(int id, int count) {
+        return questionDAO.updateCommentCount(id, count);
+    }
 }

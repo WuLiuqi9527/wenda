@@ -45,8 +45,8 @@ public interface QuestionDAO {
     @Select({"select", SELECT_FIELDS, "from", TABLE_NAME,
             "where user_id=#{userId} order by id desc limit #{offset}, #{limit}"})
     List<Question> getUserLatestQuestions(@Param("userId") int userId,
-                                      @Param("offset") int offset,
-                                      @Param("limit") int limit);
+                                          @Param("offset") int offset,
+                                          @Param("limit") int limit);
 
     /**
      * 选取最近发布的问题 (offset, limit)
@@ -59,4 +59,13 @@ public interface QuestionDAO {
     List<Question> getLatestQuestions(@Param("offset") int offset,
                                       @Param("limit") int limit);
 
+    /**
+     * 更新 Question 下的评论数目
+     *
+     * @param id
+     * @param commentCount
+     * @return
+     */
+    @Update({"update", TABLE_NAME, "set comment_count = #{commentCount} where id=#{id}"})
+    int updateCommentCount(@Param("id") int id, @Param("commentCount") int commentCount);
 }
