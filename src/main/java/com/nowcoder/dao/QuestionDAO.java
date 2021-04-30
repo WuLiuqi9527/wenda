@@ -10,6 +10,7 @@ import java.util.List;
  */
 @Mapper
 public interface QuestionDAO {
+
     String TABLE_NAME = " question ";
     String INSERT_FIELDS = " title, content, created_date, user_id, comment_count ";
     String SELECT_FIELDS = " id, " + INSERT_FIELDS;
@@ -42,9 +43,20 @@ public interface QuestionDAO {
      * @return
      */
     @Select({"select", SELECT_FIELDS, "from", TABLE_NAME,
-            "where user_id=#{userId} limit #{offset}, #{limit}"})
-    List<Question> getLatestQuestions(@Param("userId") int userId,
+            "where user_id=#{userId} order by id desc limit #{offset}, #{limit}"})
+    List<Question> getUserLatestQuestions(@Param("userId") int userId,
                                       @Param("offset") int offset,
+                                      @Param("limit") int limit);
+
+    /**
+     * 选取最近发布的问题 (offset, limit)
+     *
+     * @param offset
+     * @param limit
+     * @return
+     */
+    @Select({"select", SELECT_FIELDS, "from", TABLE_NAME, "order by id desc limit #{offset}, #{limit}"})
+    List<Question> getLatestQuestions(@Param("offset") int offset,
                                       @Param("limit") int limit);
 
 }

@@ -13,22 +13,31 @@ import java.util.List;
  */
 @Service
 public class QuestionService {
+
     @Autowired
     QuestionDAO questionDAO;
 
+    @Autowired
+    SensitiveService sensitiveService;
+
     public int addQuestion(Question question) {
-        // 需要经过敏感词过滤
         question.setTitle(HtmlUtils.htmlEscape(question.getTitle()));
         question.setContent(HtmlUtils.htmlEscape(question.getContent()));
-
+        // 敏感词过滤
+        question.setTitle(sensitiveService.filter(question.getTitle()));
+        question.setContent(sensitiveService.filter(question.getContent()));
         return questionDAO.addQuestion(question) > 0 ? question.getId() : 0;
     }
 
-    public Question getQuestion(int id) {
+    public Question getById(int id) {
         return questionDAO.getById(id);
     }
 
-    public List<Question> getLatestQuestions(int userId, int offset, int limit) {
-        return questionDAO.getLatestQuestions(userId, offset, limit);
+    public List<Question> getLatestQuestions(int offset, int limit) {
+        return questionDAO.getLatestQuestions(offset, limit);
+    }
+
+    public List<Question> getUserLatestQuestions(int userId, int offset, int limit) {
+        return questionDAO.getUserLatestQuestions(userId, offset, limit);
     }
 }

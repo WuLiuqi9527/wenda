@@ -28,7 +28,12 @@ public class HomeController {
     UserService userService;
 
     private List<ViewObject> getQuestions(int userId, int offset, int limit) {
-        List<Question> questionList = questionService.getLatestQuestions(userId, offset, limit);
+        List<Question> questionList;
+        if (userId == 0) {
+            questionList = questionService.getLatestQuestions(offset, limit);
+        } else {
+            questionList = questionService.getUserLatestQuestions(userId, offset, limit);
+        }
         List<ViewObject> vos = new ArrayList<>();
         for (Question question : questionList) {
             ViewObject vo = new ViewObject();
@@ -42,7 +47,7 @@ public class HomeController {
     @RequestMapping(path = {"/", "/index"}, method = {RequestMethod.GET, RequestMethod.POST})
     public String index(Model model,
                         @RequestParam(value = "pop", defaultValue = "0") int pop) {
-        model.addAttribute("vos", getQuestions(1, 0, 10));
+        model.addAttribute("vos", getQuestions(0, 0, 10));
         return "index";
     }
 

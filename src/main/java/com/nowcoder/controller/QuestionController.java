@@ -2,31 +2,44 @@ package com.nowcoder.controller;
 
 import com.nowcoder.model.HostHolder;
 import com.nowcoder.model.Question;
+import com.nowcoder.model.ViewObject;
 import com.nowcoder.service.QuestionService;
+import com.nowcoder.service.UserService;
 import com.nowcoder.util.WendaUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author hc
  */
 @Controller
 public class QuestionController {
-    private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
+    private static final Logger logger = LoggerFactory.getLogger(QuestionController.class);
+
+    @Autowired
+    UserService userService;
 
     @Autowired
     QuestionService questionService;
 
     @Autowired
     HostHolder hostHolder;
+
+    @RequestMapping(value = "/question/{qid}", method = {RequestMethod.GET})
+    public String questionDetail(Model model, @PathVariable("qid") int qid) {
+        Question question = questionService.getById(qid);
+        model.addAttribute("question", question);
+        model.addAttribute("user", userService.getUser(question.getUserId()));
+
+        return "detail";
+    }
 
     @RequestMapping(value = "/question/add", method = {RequestMethod.POST})
     @ResponseBody
@@ -46,7 +59,7 @@ public class QuestionController {
                 return WendaUtil.getJSONString(0);
             }
         } catch (Exception e) {
-            logger.error("发布问题失败" + e.getMessage());
+            logger.error("发布问题失败：" + e.getMessage());
         }
         return WendaUtil.getJSONString(1, "失败");
     }
