@@ -46,6 +46,15 @@ public interface CommentDAO {
     List<Comment> selectByEntity(@Param("entityId") int entityId, @Param("entityType") int entityType);
 
     /**
+     * 筛选指定评论
+     *
+     * @param id
+     * @return
+     */
+    @Select({"select", SELECT_FIELDS, "from", TABLE_NAME, "where id=#{id}"})
+    Comment getCommentById(int id);
+
+    /**
      * 得到 [entityId, entityType]下的评论条数
      *
      * @param entityId
