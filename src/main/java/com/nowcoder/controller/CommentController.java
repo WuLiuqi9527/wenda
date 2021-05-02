@@ -49,16 +49,15 @@ public class CommentController {
             content = sensitiveService.filter(content);
             // 过滤content
             Comment comment = new Comment();
+            comment.setContent(content);
             if (hostHolder.getUser() != null) {
                 comment.setUserId(hostHolder.getUser().getId());
             } else {
                 comment.setUserId(WendaUtil.ANONYMOUS_USERID);
             }
-            comment.setContent(content);
-            comment.setEntityId(questionId);
-            comment.setEntityType(EntityType.ENTITY_QUESTION);
             comment.setCreatedDate(new Date());
-            comment.setStatus(0);
+            comment.setEntityType(EntityType.ENTITY_QUESTION);
+            comment.setEntityId(questionId);
 
             commentService.addComment(comment);
             // 更新题目里的评论数量
@@ -67,6 +66,6 @@ public class CommentController {
         } catch (Exception e) {
             logger.error("增加评论失败" + e.getMessage());
         }
-        return "redirect:/question/" + String.valueOf(questionId);
+        return "redirect:/question/" + questionId;
     }
 }
