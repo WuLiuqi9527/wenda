@@ -9,13 +9,12 @@ import org.apache.ibatis.annotations.*;
 @Mapper
 public interface LoginTicketDAO {
 
-    String TABLE_NAME = "login_ticket";
+    String TABLE_NAME = " login_ticket ";
     String INSERT_FIELDS = " user_id, expired, status, ticket ";
     String SELECT_FIELDS = " id, " + INSERT_FIELDS;
 
     /**
      * 向 login_ticket 表添加 ticket (用户)
-     *
      * @param ticket
      * @return
      */
@@ -25,7 +24,6 @@ public interface LoginTicketDAO {
 
     /**
      * 查看 login_ticket 表是否存在 ticket (用户)
-     *
      * @param ticket
      * @return
      */
@@ -34,7 +32,6 @@ public interface LoginTicketDAO {
 
     /**
      * 更新 ticket 状态 (登录态、登出态)
-     *
      * @param ticket
      * @param status
      */

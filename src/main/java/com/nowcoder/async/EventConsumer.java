@@ -23,7 +23,7 @@ import java.util.Map;
 @Service
 public class EventConsumer implements InitializingBean, ApplicationContextAware {
     private static final Logger logger = LoggerFactory.getLogger(EventConsumer.class);
-    private Map<EventType, List<EventHandler>> config = new HashMap<EventType, List<EventHandler>>();
+    private Map<EventType, List<EventHandler>> config = new HashMap<>();
     private ApplicationContext applicationContext;
 
     @Autowired
@@ -48,7 +48,7 @@ public class EventConsumer implements InitializingBean, ApplicationContextAware 
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
-                while (true) {
+                while(true) {
                     String key = RedisKeyUtil.getEventQueueKey();
                     List<String> events = jedisAdapter.brpop(0, key);
 

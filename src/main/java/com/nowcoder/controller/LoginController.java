@@ -34,8 +34,7 @@ public class LoginController {
     EventProducer eventProducer;
 
     @RequestMapping(path = {"/reg/"}, method = {RequestMethod.POST})
-    public String reg(Model model,
-                      @RequestParam("username") String username,
+    public String reg(Model model, @RequestParam("username") String username,
                       @RequestParam("password") String password,
                       @RequestParam("next") String next,
                       @RequestParam(value = "rememberme", defaultValue = "false") boolean rememberme,
@@ -65,15 +64,13 @@ public class LoginController {
     }
 
     @RequestMapping(path = {"/reglogin"}, method = {RequestMethod.GET})
-    public String regloginPage(Model model,
-                               @RequestParam(value = "next", required = false) String next) {
+    public String regloginPage(Model model, @RequestParam(value = "next", required = false) String next) {
         model.addAttribute("next", next);
         return "login";
     }
 
     @RequestMapping(path = {"/login/"}, method = {RequestMethod.POST})
-    public String login(Model model,
-                        @RequestParam("username") String username,
+    public String login(Model model, @RequestParam("username") String username,
                         @RequestParam("password") String password,
                         @RequestParam(value = "next", required = false) String next,
                         @RequestParam(value = "rememberme", defaultValue = "false") boolean rememberme,

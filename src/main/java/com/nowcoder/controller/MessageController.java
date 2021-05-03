@@ -44,12 +44,12 @@ public class MessageController {
             int localUserId = hostHolder.getUser().getId();
             List<ViewObject> conversations = new ArrayList<>();
             List<Message> conversationList = messageService.getConversationList(localUserId, 0, 10);
-            for (Message msg : conversationList) {
+            for (Message message : conversationList) {
                 ViewObject vo = new ViewObject();
-                vo.set("message", msg);
-                int targetId = msg.getFromId() == localUserId ? msg.getToId() : msg.getFromId();
+                vo.set("message", message);
+                int targetId = message.getFromId() == localUserId ? message.getToId() : message.getFromId();
                 vo.set("user", userService.getUser(targetId));
-                vo.set("unread", messageService.getConversationUnreadCount(localUserId, msg.getConversationId()));
+                vo.set("unread", messageService.getConversationUnreadCount(localUserId, message.getConversationId()));
                 conversations.add(vo);
             }
             model.addAttribute("conversations", conversations);
@@ -60,22 +60,27 @@ public class MessageController {
     }
 
     @RequestMapping(path = {"/msg/detail"}, method = {RequestMethod.GET})
-    public String getConversationDetail(Model model, @RequestParam("conversationId") String conversationId) {
+    public String conversationDetail(Model model, @Param("conversationId") String conversationId) {
         try {
             List<Message> messageList = messageService.getConversationDetail(conversationId, 0, 10);
-            List<ViewObject> messages = new ArrayList<ViewObject>();
+            List<ViewObject> messages = new ArrayList<>();
             for (Message message : messageList) {
                 ViewObject vo = new ViewObject();
                 vo.set("message", message);
-                vo.set("user", userService.getUser(message.getFromId()));
+                User user = userService.getUser(message.getFromId());
+                if (user == null) {
+                    continue;
+                }
+                vo.set("user", user);
                 messages.add(vo);
             }
             model.addAttribute("messages", messages);
         } catch (Exception e) {
-            logger.error("获取详情失败" + e.getMessage());
+            logger.error("获取详情消息失败" + e.getMessage());
         }
         return "letterDetail";
     }
+
 
     @RequestMapping(path = {"/msg/addMessage"}, method = {RequestMethod.POST})
     @ResponseBody
@@ -91,15 +96,15 @@ public class MessageController {
             }
 
             Message msg = new Message();
-            msg.setCreatedDate(new Date());
+            msg.setContent(content);
             msg.setFromId(hostHolder.getUser().getId());
             msg.setToId(user.getId());
-            msg.setContent(content);
+            msg.setCreatedDate(new Date());
             messageService.addMessage(msg);
             return WendaUtil.getJSONString(0);
         } catch (Exception e) {
-            logger.error("发送消息失败" + e.getMessage());
-            return WendaUtil.getJSONString(1, "发信失败");
+            logger.error("增加站内信失败" + e.getMessage());
+            return WendaUtil.getJSONString(1, "插入站内信失败");
         }
     }
 

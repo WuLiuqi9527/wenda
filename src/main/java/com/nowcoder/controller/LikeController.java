@@ -40,6 +40,12 @@ public class LikeController {
         if (hostHolder.getUser() == null) {
             return WendaUtil.getJSONString(999);
         }
+        Comment comment = commentService.getCommentById(commentId);
+
+        eventProducer.fireEvent(new EventModel(EventType.LIKE)
+                .setActorId(hostHolder.getUser().getId()).setEntityId(commentId)
+                .setEntityType(EntityType.ENTITY_COMMENT).setEntityOwnerId(comment.getUserId())
+                .setExt("questionId", String.valueOf(comment.getEntityId())));
 
         Comment comment = commentService.getCommentById(commentId);
         eventProducer.fireEvent(new EventModel(EventType.LIKE)

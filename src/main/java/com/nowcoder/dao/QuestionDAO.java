@@ -17,7 +17,6 @@ public interface QuestionDAO {
 
     /**
      * 向 Question 表添加问题
-     *
      * @param question
      * @return 返回主键 id
      */
@@ -26,42 +25,25 @@ public interface QuestionDAO {
     int addQuestion(Question question);
 
     /**
-     * 选取指定问题 (id)
-     *
-     * @param id
-     * @return
-     */
-    @Select({"select", SELECT_FIELDS, "from", TABLE_NAME, "where id=#{id}"})
-    Question getById(@Param("id") int id);
-
-    /**
      * 选取指定问题 (userId, offset, limit)
-     *
      * @param userId
      * @param offset
      * @param limit
      * @return
      */
-    @Select({"select", SELECT_FIELDS, "from", TABLE_NAME,
-            "where user_id=#{userId} order by id desc limit #{offset}, #{limit}"})
-    List<Question> getUserLatestQuestions(@Param("userId") int userId,
-                                          @Param("offset") int offset,
-                                          @Param("limit") int limit);
+    List<Question> selectLatestQuestions(@Param("userId") int userId,
+                                         @Param("offset") int offset, @Param("limit") int limit);
 
     /**
-     * 选取最近发布的问题 (offset, limit)
-     *
-     * @param offset
-     * @param limit
+     * 选取指定问题 (id)
+     * @param id
      * @return
      */
-    @Select({"select", SELECT_FIELDS, "from", TABLE_NAME, "order by id desc limit #{offset}, #{limit}"})
-    List<Question> getLatestQuestions(@Param("offset") int offset,
-                                      @Param("limit") int limit);
+    @Select({"select", SELECT_FIELDS, "from", TABLE_NAME, "where id=#{id}"})
+    Question getById(int id);
 
     /**
      * 更新 Question 下的评论数目
-     *
      * @param id
      * @param commentCount
      * @return

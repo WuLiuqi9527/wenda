@@ -20,6 +20,10 @@ public class QuestionService {
     @Autowired
     SensitiveService sensitiveService;
 
+    public Question getById(int id) {
+        return questionDAO.getById(id);
+    }
+
     public int addQuestion(Question question) {
         question.setTitle(HtmlUtils.htmlEscape(question.getTitle()));
         question.setContent(HtmlUtils.htmlEscape(question.getContent()));
@@ -29,16 +33,8 @@ public class QuestionService {
         return questionDAO.addQuestion(question) > 0 ? question.getId() : 0;
     }
 
-    public Question getById(int id) {
-        return questionDAO.getById(id);
-    }
-
-    public List<Question> getLatestQuestions(int offset, int limit) {
-        return questionDAO.getLatestQuestions(offset, limit);
-    }
-
-    public List<Question> getUserLatestQuestions(int userId, int offset, int limit) {
-        return questionDAO.getUserLatestQuestions(userId, offset, limit);
+    public List<Question> getLatestQuestions(int userId, int offset, int limit) {
+        return questionDAO.selectLatestQuestions(userId, offset, limit);
     }
 
     public int updateCommentCount(int id, int count) {

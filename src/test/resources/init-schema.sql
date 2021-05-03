@@ -1,5 +1,5 @@
-DROP TABLE IF EXISTS `question`;
-CREATE TABLE `question` (
+  DROP TABLE IF EXISTS `question`;
+  CREATE TABLE `question` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `title` VARCHAR(255) NOT NULL,
   `content` TEXT NULL,
@@ -7,9 +7,8 @@ CREATE TABLE `question` (
   `created_date` DATETIME NOT NULL,
   `comment_count` INT NOT NULL,
   PRIMARY KEY (`id`),
-  INDEX `date_index` (`created_date` ASC))
-  ENGINE = InnoDB
-  DEFAULT CHARACTER SET = utf8;
+  INDEX `date_index` (`created_date` ASC)
+  ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
   DROP TABLE IF EXISTS `user`;
   CREATE TABLE `user` (
@@ -31,7 +30,7 @@ CREATE TABLE `question` (
     `status` INT NULL DEFAULT 0,
     PRIMARY KEY (`id`),
     UNIQUE INDEX `ticket_UNIQUE` (`ticket` ASC)
-    ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
   DROP TABLE IF EXISTS `comment`;
   CREATE TABLE `comment` (
@@ -57,9 +56,8 @@ CREATE TABLE `question` (
     `conversation_id` VARCHAR(45) NOT NULL,
     PRIMARY KEY (`id`),
     INDEX `conversation_index` (`conversation_id` ASC),
-    INDEX `created_date` (`created_date` ASC))
-  ENGINE = InnoDB
-  DEFAULT CHARACTER SET = utf8;
+    INDEX `created_date` (`created_date` ASC)
+  ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
   DROP TABLE IF EXISTS `feed`;
   CREATE TABLE `feed` (
@@ -69,6 +67,5 @@ CREATE TABLE `question` (
     `data` TINYTEXT NULL,
     `type` INT NULL,
     PRIMARY KEY (`id`),
-    INDEX `user_index` (`user_id` ASC))
-  ENGINE = InnoDB
-  DEFAULT CHARACTER SET = utf8;
+    INDEX `user_index` (`user_id` ASC)
+  ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

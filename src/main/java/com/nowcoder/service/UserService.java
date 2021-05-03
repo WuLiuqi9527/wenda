@@ -94,6 +94,7 @@ public class UserService {
         //登录后下发 ticket 证明身份
         String ticket = addLoginTicket(user.getId());
         map.put("ticket", ticket);
+        map.put("userId", user.getId());
         return map;
     }
 
