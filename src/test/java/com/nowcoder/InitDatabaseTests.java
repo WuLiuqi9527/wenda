@@ -2,8 +2,13 @@ package com.nowcoder;
 
 import com.nowcoder.dao.QuestionDAO;
 import com.nowcoder.dao.UserDAO;
+import com.nowcoder.model.EntityType;
 import com.nowcoder.model.Question;
 import com.nowcoder.model.User;
+import com.nowcoder.service.FollowService;
+import com.nowcoder.service.SensitiveService;
+import com.nowcoder.service.UserService;
+import com.nowcoder.util.JedisAdapter;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,28 +24,39 @@ import java.util.Random;
 @Sql("/init-schema.sql")
 public class InitDatabaseTests {
     @Autowired
-    UserDAO userDAO;
+    UserService userService;
 
     @Autowired
     QuestionDAO questionDAO;
 
+    @Autowired
+    SensitiveService sensitiveUtil;
+
+    @Autowired
+    FollowService followService;
+
+    @Autowired
+    JedisAdapter jedisAdapter;
+
     @Test
     public void contextLoads() {
         Random random = new Random();
+        jedisAdapter.getJedis().flushDB();
         for (int i = 0; i < 11; ++i) {
-            User user = new User();
-            user.setHeadUrl(String.format("http://images.nowcoder.com/head/%dt.png", random.nextInt(1000)));
-            user.setName(String.format("USER%d", i));
-            user.setPassword("");
-            user.setSalt("");
-            userDAO.addUser(user);
+            String username = String.format("%d%d", i + 1, i + 1);
+            String password = String.format("%d%d", i + 1, i + 1);
+            userService.register(username, password);
+
+            for (int j = 1; j < i; ++j) {
+                followService.follow(j, EntityType.ENTITY_USER, i);
+            }
 
             Question question = new Question();
             question.setCommentCount(i);
             Date date = new Date();
             date.setTime(date.getTime() + 1000 * 3600 * 5 * i);
             question.setCreatedDate(date);
-            question.setUserId(i);
+            question.setUserId(i + 1);
             question.setTitle(String.format("TITLE{%d}", i));
             question.setContent(String.format("Balaababalalalal Content %d", i));
             questionDAO.addQuestion(question);
